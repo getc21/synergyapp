@@ -582,7 +582,9 @@ class AuthController extends GetxController {
           children: [
             Icon(Icons.store, color: Utils.colorBotones),
             const SizedBox(width: 8),
-            const Text('¡Bienvenido Administrador!'),
+            Expanded(
+              child: const Text('¡Bienvenido Administrador!'),
+            ),
           ],
         ),
         content: const Text(
