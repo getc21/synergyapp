@@ -5,6 +5,7 @@ import 'package:bellezapp/controllers/theme_controller.dart';
 import 'package:bellezapp/controllers/cash_controller.dart';
 import 'package:bellezapp/controllers/auth_controller.dart';
 import 'package:bellezapp/controllers/expense_controller.dart';
+import 'package:bellezapp/controllers/brand_controller.dart';
 import 'package:bellezapp/pages/home_page.dart';
 import 'package:bellezapp/pages/login_page.dart';
 import 'package:bellezapp/pages/splash_screen.dart';
@@ -24,6 +25,7 @@ void main() async {
   Get.put(LoadingController());
   Get.put(CashController());
   Get.put(ExpenseController());
+  Get.lazyPut(() => BrandController());
   
   runApp(const BeautyStoreApp());
 }
@@ -43,7 +45,7 @@ class BeautyStoreAppState extends State<BeautyStoreApp> {
     return Obx(() {
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'NaturalMarket',
+        title: 'SynergyApp',
         
         // Configuración de temas dinámicos
         theme: themeController.isInitialized 

@@ -10,7 +10,10 @@ import 'order_controller.dart';
 import 'customer_controller.dart';
 import 'discount_controller.dart';
 import 'cash_controller.dart';
+import 'category_controller.dart';
+
 import 'location_controller.dart';
+import 'supplier_controller.dart';
 
 class StoreController extends GetxController {
   final AuthController _authController = Get.find<AuthController>();
@@ -31,6 +34,10 @@ class StoreController extends GetxController {
   bool get isLoading => _isLoading.value;
   String get errorMessage => _errorMessage.value;
   bool get isAdmin => _authController.isAdmin;
+  
+  // ⭐ MULTI-TENANT: brandId de la tienda actual
+  String? get currentBrandId => _currentStore.value?['brandId'];
+  String? get currentStoreId => _currentStore.value?['_id'];
 
   @override
   void onInit() {
@@ -161,7 +168,17 @@ class StoreController extends GetxController {
         await customerController.refreshForStore();
       }
       
-      // CategoryController NO necesita refresh (es global)
+      // CategoryController - \u2b50 MULTI-TENANT: categorías ahora están scoped por brand
+      if (Get.isRegistered<CategoryController>()) {
+        final categoryController = Get.find<CategoryController>();
+        await categoryController.refreshForStore();
+      }
+      
+      // SupplierController - \u2b50 MULTI-TENANT: proveedores ahora están scoped por brand
+      if (Get.isRegistered<SupplierController>()) {
+        final supplierController = Get.find<SupplierController>();
+        await supplierController.refreshForStore();
+      }
       
       if (Get.isRegistered<DiscountController>()) {
         final discountController = Get.find<DiscountController>();

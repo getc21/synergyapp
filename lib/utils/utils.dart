@@ -37,7 +37,7 @@ class Utils {
       final themeController = Get.find<ThemeController>();
       return themeController.currentTheme.primaryColor;
     } catch (e) {
-      return Color(0xFFEC407A); // fallback
+      return Color(0xFF4F46E5); // fallback Indigo-600
     }
   }
 
@@ -50,7 +50,7 @@ class Utils {
       }
       return themeController.currentTheme.lightTheme.colorScheme.surface;
     } catch (e) {
-      return Color(0xFFF8BBD0); // fallback
+      return Color(0xFFF9FAFB); // fallback Gray-50
     }
   }
 
@@ -68,7 +68,7 @@ class Utils {
       }
       return themeController.currentTheme.lightTheme.colorScheme.surfaceContainerHighest;
     } catch (e) {
-      return Color(0xFFFCE4EC); // fallback
+      return Color(0xFFFFFFFF); // fallback White
     }
   }
 
@@ -77,7 +77,7 @@ class Utils {
       final themeController = Get.find<ThemeController>();
       return themeController.currentTheme.accentColor;
     } catch (e) {
-      return Color(0xFFF06292); // fallback
+      return Color(0xFFDB2777); // fallback Pink-600
     }
   }
 

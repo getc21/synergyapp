@@ -84,7 +84,8 @@ class DiscountController extends GetxController {
     await loadDiscounts();
   }
 
-  // ⭐ MÉTODO DE PRUEBA: Cargar TODOS los descuentos sin filtro de tienda
+  // ⭐ MÉTODO DE PRUEBA: Cargar descuentos sin filtro de tienda específica
+  // MULTI-TENANT: el backend SIEMPRE filtra por brandId del JWT, así que es seguro
   Future<void> loadAllDiscountsForTesting() async {
     _isLoading.value = true;
     _errorMessage.value = '';
@@ -92,7 +93,7 @@ class DiscountController extends GetxController {
     try {
       final result = await _discountProvider.getDiscounts(
         active: null,
-        storeId: null, // ⭐ SIN FILTRO DE TIENDA
+        storeId: null, // Sin filtro de tienda, pero el backend filtra por brand del JWT
       );
 
 

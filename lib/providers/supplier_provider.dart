@@ -19,10 +19,16 @@ class SupplierProvider {
   };
 
   // Obtener todos los proveedores
-  Future<Map<String, dynamic>> getSuppliers() async {
+  Future<Map<String, dynamic>> getSuppliers({String? storeId}) async {
     try {
+      // ⭐ MULTI-TENANT: el backend filtra por brandId del JWT automáticamente
+      final queryParams = <String, String>{};
+      if (storeId != null) queryParams['storeId'] = storeId;
+      
+      final uri = Uri.parse('$baseUrl/suppliers').replace(queryParameters: queryParams.isNotEmpty ? queryParams : null);
+      
       final http.Response response = await http.get(
-        Uri.parse('$baseUrl/suppliers'),
+        uri,
         headers: _headers,
       );
       final data = jsonDecode(response.body);
@@ -75,6 +81,7 @@ class SupplierProvider {
     String? contactPhone,
     String? address,
     File? imageFile,
+    String? brandId, // ⭐ MULTI-TENANT
   }) async {
     try {
       final http.MultipartRequest request = http.MultipartRequest(
@@ -88,6 +95,8 @@ class SupplierProvider {
       if (contactEmail != null) request.fields['contactEmail'] = contactEmail;
       if (contactPhone != null) request.fields['contactPhone'] = contactPhone;
       if (address != null) request.fields['address'] = address;
+      // ⭐ MULTI-TENANT: enviar brandId al crear
+      if (brandId != null) request.fields['brandId'] = brandId;
 
       if (imageFile != null) {
         request.files.add(

@@ -5,7 +5,7 @@ import '../services/theme_service.dart';
 
 class ThemeController extends GetxController {
   // Variables reactivas
-  final RxString _currentThemeId = 'beauty'.obs;
+  final RxString _currentThemeId = 'synergy'.obs;
   final Rx<ThemeMode> _themeMode = ThemeMode.system.obs;
   final RxBool _isInitialized = false.obs;
 
@@ -161,7 +161,7 @@ class ThemeController extends GetxController {
   Future<void> resetTheme() async {
     try {
       await ThemeService.clearThemePreferences();
-      _currentThemeId.value = 'beauty';
+      _currentThemeId.value = 'synergy';
       _themeMode.value = ThemeMode.system;
       _applyTheme();
       

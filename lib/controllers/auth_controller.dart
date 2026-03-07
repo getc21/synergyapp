@@ -47,6 +47,8 @@ class AuthController extends GetxController {
   String get userRoleDisplay {
     final role = currentUser?['role'];
     switch (role) {
+      case 'superadmin':
+        return 'Super Administrador';
       case 'admin':
         return 'Administrador';
       case 'manager':
@@ -59,10 +61,14 @@ class AuthController extends GetxController {
   }
   
   // Getters de rol y permisos
+  bool get isSuperAdmin => currentUser?['role'] == 'superadmin';
   bool get isAdmin => currentUser?['role'] == 'admin';
   bool get isManager => currentUser?['role'] == 'manager';
   bool get isEmployee => currentUser?['role'] == 'employee';
   String? get userRole => currentUser?['role'];
+  
+  // ⭐ MULTI-TENANT: brandId del usuario autenticado
+  String? get brandId => currentUser?['brandId'];
   
   // Permisos de gestión
   bool canManageUsers() => isAdmin;
@@ -368,6 +374,7 @@ class AuthController extends GetxController {
         lastName: lastName,
         role: role ?? 'employee',
         stores: storesToAssign,
+        brandId: brandId, // ⭐ MULTI-TENANT: pasar brandId del admin actual
       );
 
       if (result['success']) {
@@ -588,7 +595,7 @@ class AuthController extends GetxController {
           ],
         ),
         content: const Text(
-          'Para comenzar a usar Bellezapp necesitas registrar tu primera tienda.\n\n'
+          'Para comenzar a usar SynergyApp necesitas registrar tu primera tienda.\n\n'
           'Sin una tienda registrada no podrás acceder a las funciones de caja, '
           'productos, ventas, etc.\n\n'
           '¿Deseas registrar una tienda ahora?'

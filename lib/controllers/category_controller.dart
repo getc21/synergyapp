@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import '../providers/category_provider.dart';
 import 'auth_controller.dart';
+import 'store_controller.dart';
 
 class CategoryController extends GetxController {
   final AuthController _authController = Get.find<AuthController>();
+  
+  // ⭐ MULTI-TENANT: necesitamos acceso al StoreController para el contexto de tienda/brand
+  StoreController get _storeController => Get.find<StoreController>();
   
   CategoryProvider get _categoryProvider => CategoryProvider(_authController.token);
 
@@ -36,7 +40,10 @@ class CategoryController extends GetxController {
     _errorMessage.value = '';
 
     try {
-      final result = await _categoryProvider.getCategories();
+      // ⭐ MULTI-TENANT: pasar storeId para filtrado contextual
+      final result = await _categoryProvider.getCategories(
+        storeId: _storeController.currentStoreId,
+      );
 
       if (result['success']) {
         _categories.value = List<Map<String, dynamic>>.from(result['data']);
@@ -110,6 +117,7 @@ class CategoryController extends GetxController {
         name: name,
         description: description,
         imageFile: imageFile,
+        brandId: _authController.brandId, // ⭐ MULTI-TENANT
       );
 
       if (result['success']) {

@@ -97,6 +97,7 @@ class AuthProvider {
     required String lastName,
     required String role,
     List<String>? stores,
+    String? brandId, // ⭐ MULTI-TENANT: brandId para asignar al nuevo usuario
   }) async {
     try {
       final requestBody = <String, dynamic>{
@@ -111,6 +112,11 @@ class AuthProvider {
       // Agregar tiendas si se proporcionan
       if (stores != null && stores.isNotEmpty) {
         requestBody['stores'] = stores;
+      }
+      
+      // ⭐ MULTI-TENANT: incluir brandId si está disponible
+      if (brandId != null) {
+        requestBody['brandId'] = brandId;
       }
       
       final response = await http.post(

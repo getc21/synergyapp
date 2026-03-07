@@ -4,6 +4,7 @@ class Store {
   final String? address;
   final String? phone;
   final String? email;
+  final String? brandId; // ⭐ MULTI-TENANT
   final String status;
   final DateTime createdAt;
 
@@ -13,6 +14,7 @@ class Store {
     this.address,
     this.phone,
     this.email,
+    this.brandId,
     this.status = 'active',
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
@@ -25,6 +27,7 @@ class Store {
       address: map['address'] as String?,
       phone: map['phone'] as String?,
       email: map['email'] as String?,
+      brandId: map['brandId']?.toString(),
       status: map['status'] as String? ?? 'active',
       createdAt: DateTime.tryParse(map['createdAt'] ?? map['created_at'] ?? '') ?? DateTime.now(),
     );
@@ -38,6 +41,7 @@ class Store {
       'address': address,
       'phone': phone,
       'email': email,
+      if (brandId != null) 'brandId': brandId,
       'status': status,
       'createdAt': createdAt.toIso8601String(),
     };
@@ -50,6 +54,7 @@ class Store {
     String? address,
     String? phone,
     String? email,
+    String? brandId,
     String? status,
     DateTime? createdAt,
   }) {
@@ -59,6 +64,7 @@ class Store {
       address: address ?? this.address,
       phone: phone ?? this.phone,
       email: email ?? this.email,
+      brandId: brandId ?? this.brandId,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
     );

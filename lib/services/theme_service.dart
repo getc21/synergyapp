@@ -7,7 +7,7 @@ class ThemeService {
   // Obtener la preferencia de tema guardada
   static Future<String> getSavedTheme() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_themeKey) ?? 'beauty'; // tema por defecto
+    return prefs.getString(_themeKey) ?? 'synergy'; // tema por defecto
   }
   
   // Guardar la preferencia de tema

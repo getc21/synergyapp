@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import '../providers/supplier_provider.dart';
 import 'auth_controller.dart';
+import 'store_controller.dart';
 
 class SupplierController extends GetxController {
   final AuthController _authController = Get.find<AuthController>();
+  
+  // ⭐ MULTI-TENANT: necesitamos acceso al StoreController para el contexto de tienda/brand
+  StoreController get _storeController => Get.find<StoreController>();
   
   SupplierProvider get _supplierProvider => SupplierProvider(_authController.token);
 
@@ -25,13 +29,21 @@ class SupplierController extends GetxController {
     loadSuppliers();
   }
 
+  // ⭐ MULTI-TENANT: Método para refrescar cuando cambie la tienda
+  Future<void> refreshForStore() async {
+    await loadSuppliers();
+  }
+
   // Cargar proveedores
   Future<void> loadSuppliers() async {
     _isLoading.value = true;
     _errorMessage.value = '';
 
     try {
-      final result = await _supplierProvider.getSuppliers();
+      // ⭐ MULTI-TENANT: pasar storeId para filtrado contextual
+      final result = await _supplierProvider.getSuppliers(
+        storeId: _storeController.currentStoreId,
+      );
 
       if (result['success']) {
         _suppliers.value = List<Map<String, dynamic>>.from(result['data']);
@@ -111,6 +123,7 @@ class SupplierController extends GetxController {
         contactPhone: contactPhone,
         address: address,
         imageFile: imageFile,
+        brandId: _authController.brandId, // ⭐ MULTI-TENANT
       );
 
       if (result['success']) {

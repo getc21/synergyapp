@@ -75,30 +75,45 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        // Logo o icono de la app
+                        // Logo de SynergyApp
                         Container(
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              'assets/img/logo.png',
-                              fit: BoxFit.cover,
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFF4F46E5),
+                                Color(0xFF8B5CF6),
+                                Color(0xFFDB2777),
+                              ],
                             ),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xFF4F46E5).withValues(alpha: 0.3),
+                                blurRadius: 12,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.hub_rounded,
+                            size: 40,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 24),
                         
                         // Nombre de la app
-                        SizedBox(
-                          width: 200,
-                          height: 50,
-                          child: Image.asset(
-                            'assets/img/NOMBRE.png',
-                            fit: BoxFit.contain,
+                        Text(
+                          'SynergyApp',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.primary,
+                            letterSpacing: 1.0,
                           ),
                         ),
                         const SizedBox(height: 8),

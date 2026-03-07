@@ -29,6 +29,8 @@ class Discount {
   final DateTime? startDate;
   final DateTime? endDate;
   final bool isActive;
+  final String? storeId;  // ⭐ MULTI-TENANT
+  final String? brandId;  // ⭐ MULTI-TENANT
   final DateTime createdAt;
 
   Discount({
@@ -42,6 +44,8 @@ class Discount {
     this.startDate,
     this.endDate,
     this.isActive = true,
+    this.storeId,
+    this.brandId,
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
@@ -57,6 +61,8 @@ class Discount {
       if (startDate != null) 'startDate': startDate!.toIso8601String(),
       if (endDate != null) 'endDate': endDate!.toIso8601String(),
       'active': isActive,
+      if (storeId != null) 'storeId': storeId,
+      if (brandId != null) 'brandId': brandId,
       'createdAt': createdAt.toIso8601String(),
     };
   }
@@ -77,6 +83,8 @@ class Discount {
           ? DateTime.tryParse(map['endDate'] ?? map['end_date'] ?? '') 
           : null,
       isActive: map['active'] ?? map['is_active'] == 1 || map['is_active'] == true,
+      storeId: map['storeId']?.toString(),
+      brandId: map['brandId']?.toString(),
       createdAt: DateTime.tryParse(map['createdAt'] ?? map['created_at'] ?? '') ?? DateTime.now(),
     );
   }

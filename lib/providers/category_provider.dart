@@ -20,10 +20,17 @@ class CategoryProvider {
   };
 
   // Obtener todas las categorías
-  Future<Map<String, dynamic>> getCategories() async {
+  Future<Map<String, dynamic>> getCategories({String? storeId}) async {
     try {
+      // ⭐ MULTI-TENANT: el backend filtra por brandId del JWT automáticamente
+      // storeId se pasa como query param opcional para filtrado adicional
+      final queryParams = <String, String>{};
+      if (storeId != null) queryParams['storeId'] = storeId;
+      
+      final uri = Uri.parse('$baseUrl/categories').replace(queryParameters: queryParams.isNotEmpty ? queryParams : null);
+      
       final http.Response response = await http.get(
-        Uri.parse('$baseUrl/categories'),
+        uri,
         headers: _headers,
       );
       final data = jsonDecode(response.body);
@@ -73,6 +80,7 @@ class CategoryProvider {
     required String name,
     String? description,
     File? imageFile,
+    String? brandId, // ⭐ MULTI-TENANT
   }) async {
     try {
       final http.MultipartRequest request = http.MultipartRequest(
@@ -83,6 +91,8 @@ class CategoryProvider {
       request.headers.addAll(_authHeaders);
       request.fields['name'] = name;
       if (description != null) request.fields['description'] = description;
+      // ⭐ MULTI-TENANT: enviar brandId al crear
+      if (brandId != null) request.fields['brandId'] = brandId;
 
       if (imageFile != null) {
         // Determinar el tipo MIME basado en la extensión

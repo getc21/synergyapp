@@ -23,6 +23,13 @@ class AppTheme {
 class ThemeConfig {
   // Colores base para los temas
   static const Map<String, Map<String, Color>> themeColors = {
+    'synergy': {
+      'primary': Color(0xFF4F46E5),
+      'accent': Color(0xFFDB2777),
+      'background': Color(0xFFF9FAFB),
+      'card': Color(0xFFFFFFFF),
+      'surface': Color(0xFF6366F1),
+    },
     'professional': {
       'primary': Color(0xFF1565C0),
       'accent': Color(0xFF424242),
@@ -222,6 +229,15 @@ class ThemeConfig {
 
   // Lista de temas disponibles
   static List<AppTheme> get availableThemes => [
+    AppTheme(
+      id: 'synergy',
+      name: 'SynergyApp',
+      description: 'Tema principal de SynergyApp con tonos índigo y rosa',
+      lightTheme: createLightTheme('synergy'),
+      darkTheme: createDarkTheme('synergy'),
+      primaryColor: themeColors['synergy']!['primary']!,
+      accentColor: themeColors['synergy']!['accent']!,
+    ),
     AppTheme(
       id: 'professional',
       name: 'Profesional Azul',

@@ -5,6 +5,8 @@ class Customer {
   final String? email;
   final String? address;
   final String? notes;
+  final String? storeId;  // ⭐ MULTI-TENANT
+  final String? brandId;  // ⭐ MULTI-TENANT
   final DateTime createdAt;
   final DateTime? lastPurchase;
   final double totalSpent;
@@ -18,6 +20,8 @@ class Customer {
     this.email,
     this.address,
     this.notes,
+    this.storeId,
+    this.brandId,
     DateTime? createdAt,
     this.lastPurchase,
     this.totalSpent = 0.0,
@@ -33,6 +37,8 @@ class Customer {
       if (email != null) 'email': email,
       if (address != null) 'address': address,
       if (notes != null) 'notes': notes,
+      if (storeId != null) 'storeId': storeId,
+      if (brandId != null) 'brandId': brandId,
       'createdAt': createdAt.toIso8601String(),
       if (lastPurchase != null) 'lastPurchase': lastPurchase!.toIso8601String(),
       'totalSpent': totalSpent,
@@ -49,6 +55,8 @@ class Customer {
       email: map['email'],
       address: map['address'],
       notes: map['notes'],
+      storeId: map['storeId']?.toString(),
+      brandId: map['brandId']?.toString(),
       createdAt: DateTime.tryParse(map['createdAt'] ?? map['created_at'] ?? '') ?? DateTime.now(),
       lastPurchase: map['lastPurchase'] != null || map['last_purchase'] != null
           ? DateTime.tryParse(map['lastPurchase'] ?? map['last_purchase'] ?? '') 

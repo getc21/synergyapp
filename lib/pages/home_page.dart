@@ -17,6 +17,8 @@ import 'package:bellezapp/pages/advanced_reports_page.dart';
 import 'package:bellezapp/pages/expense_report_page.dart';
 import 'package:bellezapp/pages/returns_list_page.dart';
 import 'package:bellezapp/pages/quotations_list_page.dart';
+import 'package:bellezapp/pages/brands_page.dart';
+import 'package:bellezapp/pages/superadmin_dashboard_page.dart';
 import 'package:bellezapp/utils/utils.dart';
 import 'package:bellezapp/widgets/store_selector.dart';
 import 'package:flutter/material.dart';
@@ -96,15 +98,18 @@ class HomePageState extends State<HomePage> {
   
   @override
   Widget build(BuildContext context) {
+    final isSuperAdmin = authController.isSuperAdmin;
     final canSeeSuppliersTab = authController.isAdmin || authController.isManager;
     
-    List<Widget> widgetOptions = <Widget>[
-      ProductListPage(),
-      CategoryListPage(),
-      if (canSeeSuppliersTab) SupplierListPage(),
-      LocationListPage(),
-      OrderListPage()
-    ];
+    List<Widget> widgetOptions = isSuperAdmin
+        ? <Widget>[const SuperAdminDashboardPage()]
+        : <Widget>[
+            ProductListPage(),
+            CategoryListPage(),
+            if (canSeeSuppliersTab) SupplierListPage(),
+            LocationListPage(),
+            OrderListPage()
+          ];
     
     return Obx(() => PopScope(
       canPop: false,
@@ -143,21 +148,45 @@ class HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.inventory_2_outlined,
+                  isSuperAdmin ? Icons.hub_rounded : Icons.inventory_2_outlined,
                   color: Colors.white,
                   size: 24,
                 ),
               ),
               SizedBox(width: 12),
               Expanded(
-                child: Obx(() {
+                child: isSuperAdmin
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'SynergyApp',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          Text(
+                            'Panel de Super Admin',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Obx(() {
                   final currentStore = storeController.currentStore;
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'BellezaApp',
+                        'SynergyApp',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -182,8 +211,8 @@ class HomePageState extends State<HomePage> {
             ],
           ),
           actions: [
-            // Selector de Tienda (Multi-tienda)
-            StoreSelector(),
+            // Selector de Tienda (Multi-tienda) - solo para roles con tienda
+            if (!isSuperAdmin) StoreSelector(),
             // Botón de configuración de temas
             Container(
               margin: EdgeInsets.only(right: 8),
@@ -258,8 +287,9 @@ class HomePageState extends State<HomePage> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Utils.colorGnav,
-                          Utils.colorBotones,
+                          Color(0xFF4F46E5),
+                          Color(0xFF8B5CF6),
+                          Color(0xFFDB2777),
                         ],
                       ),
                     ),
@@ -279,7 +309,7 @@ class HomePageState extends State<HomePage> {
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Icon(
-                                    Icons.analytics_rounded,
+                                    Icons.hub_rounded,
                                     color: Colors.white,
                                     size: 32,
                                   ),
@@ -298,7 +328,7 @@ class HomePageState extends State<HomePage> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              'Panel de Control',
+                              'SynergyApp',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -306,7 +336,7 @@ class HomePageState extends State<HomePage> {
                               ),
                             ),
                             Text(
-                              'Gestión y Estadísticas',
+                              'Panel de Control',
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 12,
@@ -324,6 +354,17 @@ class HomePageState extends State<HomePage> {
                       children: [
                         // Sección de Gestión Principal
                         _buildSectionHeader('Gestión Principal'),
+                        if (authController.isSuperAdmin)
+                          _buildModernDrawerTile(
+                            'Gestión de Marcas',
+                            'Administrar marcas del sistema',
+                            Icons.branding_watermark_outlined,
+                            Colors.indigo,
+                            () {
+                              Navigator.pop(context);
+                              Get.to(() => const BrandsPage());
+                            },
+                          ),
                         _buildModernDrawerTile(
                           'Sistema de Caja',
                           'Control de ventas y pagos',
@@ -496,8 +537,10 @@ class HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        body: widgetOptions.elementAt(ipc.getIndexPage),
-        bottomNavigationBar: SafeArea(
+        body: isSuperAdmin
+            ? widgetOptions.first
+            : widgetOptions.elementAt(ipc.getIndexPage),
+        bottomNavigationBar: isSuperAdmin ? null : SafeArea(
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
